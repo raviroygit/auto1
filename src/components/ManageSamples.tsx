@@ -135,7 +135,7 @@ export default function ManageSamples() {
 
   const handleSave = async () => {
     await updateSubCategory(selectedSubCategory?._id, prompt);
-    alert("sub category prompt updated successfully")
+    alert("sub category prompt updated successfully");
     // Handle save logic
   };
 
@@ -449,7 +449,7 @@ export default function ManageSamples() {
                         </TableHeader>
                         <TableBody>
                           {/* {JSON.stringify(testOutput.data.user_input.attributes)} */}
-                          {testOutput.data.user_input.attributes?.map(
+                          {/* {testOutput.data.user_input.attributes?.map(
                             (attribute: any, index: number) => (
                               <TableRow key={index}>
                                 <TableCell className="font-medium">
@@ -462,7 +462,22 @@ export default function ManageSamples() {
                                 </TableCell>
                               </TableRow>
                             )
-                          )}
+                          )} */}
+
+                          {testOutput.data.user_input.attributes.map((attribute, index) => {
+                            // Extract the key and value from the attribute object
+                            const [key, value] = Object.entries(attribute)[0];
+                            return (
+                              <TableRow key={index}>
+                                <TableCell className="font-medium">
+                                  {key}
+                                </TableCell>
+                                <TableCell>
+                                  {value}
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })}
                         </TableBody>
                       </Table>
                     </div>
