@@ -17,6 +17,7 @@ import {
   generateResponse,
   getCategories,
   getFileBySubCategoryId,
+  updateSubCategory,
   uploadFiles,
 } from "../apis/api";
 
@@ -132,7 +133,10 @@ export default function ManageSamples() {
     fetchCategories();
   }, []);
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    console.log('first handleSave')
+    await updateSubCategory(selectedSubCategory?._id, prompt);
+    alert("sub category prompt updated successfully")
     // Handle save logic
   };
 
@@ -156,7 +160,7 @@ export default function ManageSamples() {
     const files = await getFileBySubCategoryId(selectedSubCategory._id);
     console.log("files", files.files);
     setUploadedFiles(files.files);
-    alert("File uploaded successfully")
+    alert("File uploaded successfully");
   };
 
   const handleDeleteFile = async (fileId: string) => {
@@ -405,72 +409,70 @@ export default function ManageSamples() {
                   <Separator />
 
                   {/* Features */}
-                  {resData.data?.user_input?.features && 
-                   <div className="space-y-4">
-                   <div className="flex items-center space-x-2">
-                     <ListChecks className="h-5 w-5 text-primary" />
-                     <h2 className="text-xl font-semibold">Key Features</h2>
-                   </div>
-                   <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                     {resData.data?.user_input &&
-                       Array.isArray(resData.data?.user_input?.features) &&
-                       resData.data?.user_input?.features?.map(
-                         (feature: string, index: number) => (
-                           <li
-                             key={index}
-                             className="flex items-center space-x-2"
-                           >
-                             <Package className="h-4 w-4 text-primary" />
-                             <span>{feature.trim()}</span>
-                           </li>
-                         )
-                       )}
-                   </ul>
-                 </div>
-                  }
-                 
+                  {resData.data?.user_input?.features && (
+                    <div className="space-y-4">
+                      <div className="flex items-center space-x-2">
+                        <ListChecks className="h-5 w-5 text-primary" />
+                        <h2 className="text-xl font-semibold">Key Features</h2>
+                      </div>
+                      <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {resData.data?.user_input &&
+                          Array.isArray(resData.data?.user_input?.features) &&
+                          resData.data?.user_input?.features?.map(
+                            (feature: string, index: number) => (
+                              <li
+                                key={index}
+                                className="flex items-center space-x-2"
+                              >
+                                <Package className="h-4 w-4 text-primary" />
+                                <span>{feature.trim()}</span>
+                              </li>
+                            )
+                          )}
+                      </ul>
+                    </div>
+                  )}
 
                   <Separator />
 
                   {/* Attributes */}
-                  {testOutput?.data?.user_input?.attributes &&
-                   <div className="space-y-4">
-                   <h2 className="text-xl font-semibold">Specifications</h2>
-                   <Table>
-                     <TableHeader>
-                       <TableRow>
-                         <TableHead className="w-[200px]">Attribute</TableHead>
-                         <TableHead>Value</TableHead>
-                       </TableRow>
-                     </TableHeader>
-                     <TableBody>
-                      {/* {JSON.stringify(testOutput.data.user_input.attributes)} */}
-                       {testOutput.data.user_input.attributes?.map(
-                         (attribute: any, index: number) => (
-                           <TableRow key={index}>
-                             <TableCell className="font-medium">
-                               {JSON.stringify(attribute.name)}
-                             </TableCell>
-                             <TableCell>
-                               {typeof attribute.value === "object"
-                                 ? JSON.stringify(attribute.value, null, 2) // Convert object to a string
-                                 : attribute.value || "N/A"}
-                             </TableCell>
-                           </TableRow>
-                         )
-                       )}
-                     </TableBody>
-                   </Table>
-                 </div>
-                  }
-                 
+                  {testOutput?.data?.user_input?.attributes && (
+                    <div className="space-y-4">
+                      <h2 className="text-xl font-semibold">Specifications</h2>
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead className="w-[200px]">
+                              Attribute
+                            </TableHead>
+                            <TableHead>Value</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {/* {JSON.stringify(testOutput.data.user_input.attributes)} */}
+                          {testOutput.data.user_input.attributes?.map(
+                            (attribute: any, index: number) => (
+                              <TableRow key={index}>
+                                <TableCell className="font-medium">
+                                  {JSON.stringify(attribute.name)}
+                                </TableCell>
+                                <TableCell>
+                                  {typeof attribute.value === "object"
+                                    ? JSON.stringify(attribute.value, null, 2) // Convert object to a string
+                                    : attribute.value || "N/A"}
+                                </TableCell>
+                              </TableRow>
+                            )
+                          )}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  )}
 
                   <Separator />
 
                   {/* Reviews */}
-                  <>
-                  
-                  </>
+                  <></>
                   <div className="space-y-4">
                     <div className="flex items-center space-x-2">
                       <Star className="h-5 w-5 text-primary" />
@@ -479,15 +481,15 @@ export default function ManageSamples() {
                       </h2>
                     </div>
                     {/* {resData.data?.user_input?.reviews?.length > 0 ? ( */}
-                      <div className="space-y-4">
-                         <Card >
-                              <CardContent className="pt-6">
-                                <p className="text-muted-foreground">
-                                  {resData.data?.user_input?.reviews}
-                                </p>
-                              </CardContent>
-                            </Card>
-                        {/* {resData.data?.user_input?.reviews?.map(
+                    <div className="space-y-4">
+                      <Card>
+                        <CardContent className="pt-6">
+                          <p className="text-muted-foreground">
+                            {resData.data?.user_input?.reviews}
+                          </p>
+                        </CardContent>
+                      </Card>
+                      {/* {resData.data?.user_input?.reviews?.map(
                           (review: string, index: number) => (
                             <Card key={index}>
                               <CardContent className="pt-6">
@@ -498,7 +500,7 @@ export default function ManageSamples() {
                             </Card>
                           )
                         )} */}
-                      </div>
+                    </div>
                     {/* ) : (
                       <p className="text-muted-foreground">No reviews yet.</p>
                     )} */}
