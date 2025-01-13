@@ -23,7 +23,7 @@ export const getCategories = async (): Promise<any> => {
   const config: AxiosRequestConfig = {
     method: "get",
     maxBodyLength: Infinity,
-    url: "http://localhost:8000/category",
+    url: "http://103.158.54.112:8001/category",
     headers: {},
   };
   return apiRequest(config);
@@ -41,7 +41,7 @@ export const addCategory = async (
   const config: AxiosRequestConfig = {
     method: "post",
     maxBodyLength: Infinity,
-    url: "http://localhost:8000/category",
+    url: "http://103.158.54.112:8001/category",
     headers: { "Content-Type": "application/json" },
     data: JSON.stringify({ name, prompt }),
   };
@@ -60,7 +60,7 @@ export const updateCategory = async (
   const config: AxiosRequestConfig = {
     method: "put",
     maxBodyLength: Infinity,
-    url: "http://localhost:8000/category",
+    url: "http://103.158.54.112:8001/category",
     headers: { "Content-Type": "application/json" },
     data: JSON.stringify({ id, prompt }),
   };
@@ -77,7 +77,7 @@ export const generateResponse = async (
     const config: AxiosRequestConfig = {
       method: "post",
       maxBodyLength: Infinity,
-      url: "http://localhost:8000/auto/ai",
+      url: "http://103.158.54.112:8001/auto/ai",
       headers: { "Content-Type": "application/json" },
       data: input,
     };
@@ -102,7 +102,7 @@ export const getSubCategoryById = async (
   const config: AxiosRequestConfig = {
     method: "get",
     maxBodyLength: Infinity,
-    url: `http://localhost:8000/sub-category/${subCategoryId}`,
+    url: `http://103.158.54.112:8001/sub-category/${subCategoryId}`,
     headers: {},
   };
   return apiRequest(config);
@@ -122,7 +122,7 @@ export const addSubCategory = async (
   const config: AxiosRequestConfig = {
     method: "post",
     maxBodyLength: Infinity,
-    url: "http://localhost:8000/sub-category",
+    url: "http://103.158.54.112:8001/sub-category",
     headers: { "Content-Type": "application/json" },
     data: JSON.stringify({ name, prompt, categoryId }),
   };
@@ -142,7 +142,7 @@ export const updateSubCategory = async (
   const config: AxiosRequestConfig = {
     method: "put",
     maxBodyLength: Infinity,
-    url: "http://localhost:8000/sub-category",
+    url: "http://103.158.54.112:8001/sub-category",
     headers: { "Content-Type": "application/json" },
     data: JSON.stringify({ id, prompt }),
   };
@@ -166,7 +166,7 @@ export const uploadFiles = async (
     const config: AxiosRequestConfig = {
       method: "post",
       maxBodyLength: Infinity,
-      url: "http://localhost:8000/file", // Assuming backend expects "files" endpoint for multiple files
+      url: "http://103.158.54.112:8001/file", // Assuming backend expects "files" endpoint for multiple files
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -189,7 +189,7 @@ export const getFileBySubCategoryId = async (subCategoryId: string): Promise<any
     const config: AxiosRequestConfig = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `http://localhost:8000/file/${subCategoryId}`,
+      url: `http://103.158.54.112:8001/file/${subCategoryId}`,
       headers: {},
     };
   
@@ -208,7 +208,7 @@ export const getFileBySubCategoryId = async (subCategoryId: string): Promise<any
     const config: AxiosRequestConfig = {
       method: "delete",
       maxBodyLength: Infinity,
-      url: `http://localhost:8000/file/${fileId}`,
+      url: `http://103.158.54.112:8001/file/${fileId}`,
       headers: {},
     };
   
