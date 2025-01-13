@@ -134,7 +134,6 @@ export default function ManageSamples() {
   }, []);
 
   const handleSave = async () => {
-    console.log('first handleSave')
     await updateSubCategory(selectedSubCategory?._id, prompt);
     alert("sub category prompt updated successfully")
     // Handle save logic
