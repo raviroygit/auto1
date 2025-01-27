@@ -221,3 +221,29 @@ export const getFileBySubCategoryId = async (subCategoryId: string): Promise<any
       throw error;
     }
   };
+
+
+
+  /**
+ * Add a new category.
+ * @param input - Description or prompt for the category
+ */
+export const formatResponse = async (
+  input: any,
+): Promise<any> => {
+  const config: AxiosRequestConfig = {
+    method: "post",
+    url: "https://auto1-server.onrender.com/auto/format",
+    headers: { "Content-Type": "application/json" },
+    data: {text:input},
+  };
+  try {
+      const response = await axios.request(config);
+      console.log('response.data', response.data.ai)
+      return response.data.ai;
+    } catch (error: any) {
+      console.error("API Error:", error.response?.data || error.message);
+      alert(error.message)
+      throw error;
+    }
+};

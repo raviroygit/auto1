@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import { Building2, ListChecks, Package, Star, Trash2 } from "lucide-react";
@@ -14,6 +15,7 @@ import { Badge } from "../components/ui/badge";
 import { Separator } from "../components/ui/separator";
 import {
   deleteFileById,
+  formatResponse,
   generateResponse,
   getCategories,
   getFileBySubCategoryId,
@@ -111,6 +113,8 @@ export default function ManageSamples() {
   });
   const [isGenerating, setIsGenerating] = useState<boolean | false>(false);
   const [resData, setResData] = useState<any>(null);
+  const [formatInput, setFormatInput] = useState<string>();
+  const [isFormatting, setIsFormatting] = useState<boolean>(false);
 
   // Update testOutput when category or subcategory changes
   useEffect(() => {
@@ -157,7 +161,6 @@ export default function ManageSamples() {
   const handleUploadFiles = async () => {
     await uploadFiles(unUploadedFiles, selectedSubCategory._id);
     const files = await getFileBySubCategoryId(selectedSubCategory._id);
-    console.log("files", files.files);
     setUploadedFiles(files.files);
     alert("File uploaded successfully");
   };
@@ -170,10 +173,31 @@ export default function ManageSamples() {
   };
 
   const handleGenerate = async () => {
-    setIsGenerating(true);
-    const res = await generateResponse(testOutput);
-    setResData(res);
-    setIsGenerating(false);
+    try {
+      if(!selectedSubCategory || !selectedCategory){
+        alert("Please select a sub category or category first");
+        return
+      }
+      setIsGenerating(true);
+      const res = await generateResponse(testOutput);
+      setResData(res);
+      setIsGenerating(false);
+    } catch (err: any) {
+      setIsGenerating(false);
+    }
+  };
+
+  const handleFormat = async () => {
+    try {
+      setIsFormatting(true);
+      const res = await formatResponse(formatInput);
+      console.log("res ", res);
+      setTestOutput(res);
+      setFormatInput(res);
+      setIsFormatting(false);
+    } catch (err: any) {
+      setIsFormatting(false);
+    }
   };
 
   const handleTestOutputChange = (
@@ -349,16 +373,19 @@ export default function ManageSamples() {
       </div>
 
       {/* Right Column - 25% */}
-      <div className="w-[40%] p-8">
-        <div className="bg-white rounded-lg shadow-md p-6">
+      <div className="w-[40%] p-8 h-[100%] gap-5">
+        <div className="bg-white rounded-lg shadow-md p-6 ">
           <h2 className="text-lg font-semibold text-gray-800 mb-4">
             TEST OUTPUT
           </h2>
           <textarea
-            value={JSON.stringify(testOutput, null, 2)}
-            onChange={handleTestOutputChange}
+            value={JSON.stringify(formatInput, null, 2)}
+            placeholder="Paste your Text here..."
+            onChange={(e) => setFormatInput(e.target.value)}
             className="w-full h-[300px] font-mono text-sm bg-gray-50 border border-gray-200 rounded-md p-4 mb-4"
           />
+
+          <div className="gap-5 flex">
           <button
             disabled={isGenerating}
             onClick={handleGenerate}
@@ -367,6 +394,19 @@ export default function ManageSamples() {
           >
             {isGenerating ? "Generating..." : "Generate"}
           </button>
+          {isFormatting ? (
+            <>Processing...</>
+          ) : (
+            <button
+              disabled={isGenerating}
+              onClick={handleFormat}
+              style={{ backgroundColor: isGenerating ? "gray" : "green" }}
+              className="w-full text-white px-4 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+            >
+              {isGenerating ? "Formatting..." : "Format"}
+            </button>
+          )}
+          </div>
         </div>
         {/* {resData.data.category_name} */}
         {resData && !isGenerating ? (
@@ -464,20 +504,20 @@ export default function ManageSamples() {
                             )
                           )} */}
 
-                          {testOutput.data.user_input.attributes.map((attribute, index) => {
-                            // Extract the key and value from the attribute object
-                            const [key, value] = Object.entries(attribute)[0];
-                            return (
-                              <TableRow key={index}>
-                                <TableCell className="font-medium">
-                                  {key}
-                                </TableCell>
-                                <TableCell>
-                                  {value}
-                                </TableCell>
-                              </TableRow>
-                            );
-                          })}
+                          {testOutput.data.user_input.attributes.map(
+                            (attribute, index) => {
+                              // Extract the key and value from the attribute object
+                              const [key, value] = Object.entries(attribute)[0];
+                              return (
+                                <TableRow key={index}>
+                                  <TableCell className="font-medium">
+                                    {key}
+                                  </TableCell>
+                                  <TableCell>{value}</TableCell>
+                                </TableRow>
+                              );
+                            }
+                          )}
                         </TableBody>
                       </Table>
                     </div>
@@ -503,21 +543,7 @@ export default function ManageSamples() {
                           </p>
                         </CardContent>
                       </Card>
-                      {/* {resData.data?.user_input?.reviews?.map(
-                          (review: string, index: number) => (
-                            <Card key={index}>
-                              <CardContent className="pt-6">
-                                <p className="text-muted-foreground">
-                                  {review}
-                                </p>
-                              </CardContent>
-                            </Card>
-                          )
-                        )} */}
                     </div>
-                    {/* ) : (
-                      <p className="text-muted-foreground">No reviews yet.</p>
-                    )} */}
                   </div>
                 </CardContent>
               </Card>
