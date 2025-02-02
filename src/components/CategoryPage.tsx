@@ -71,7 +71,6 @@ export default function CategoryPage() {
     const subCategory = category?.subCategories.find(
       (sc: any) => sc?._id === subCategoryId
     );
-    console.log(subCategoryId, "subCategory", subCategory);
     if (subCategory) {
       setSelectedSubCategory(subCategory);
       setSubCategoryPrompt(subCategory.prompt);
@@ -103,8 +102,7 @@ export default function CategoryPage() {
   const handleAddSubCategory = async () => {
     if (
       !selectedCategory ||
-      !newSubCategoryName.trim() ||
-      !newSubCategoryPrompt.trim()
+      !newSubCategoryName.trim()
     ) {
       alert("Please fill in all fields and select a category");
       return;

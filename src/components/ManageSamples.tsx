@@ -22,6 +22,7 @@ import {
   updateSubCategory,
   uploadFiles,
 } from "../apis/api";
+import { defaultPrompt } from "../constant";
 
 interface FileItem {
   name: string;
@@ -73,7 +74,7 @@ function LoadingState() {
 
 export default function ManageSamples() {
   const [categories, setCategories] = useState<Category[]>([]);
-  const [prompt, setPrompt] = useState("");
+  const [prompt, setPrompt] = useState(defaultPrompt);
   const [uploadedFiles, setUploadedFiles] = useState<FileItem[]>([]);
   const [unUploadedFiles, setUnUploadedFiles] = useState<any>([]);
   const [selectedSubCategory, setSelectedSubCategory] = useState<
@@ -145,7 +146,6 @@ export default function ManageSamples() {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files: any = e.target.files;
-    console.log("files", files[0]);
     if (files) {
       const newFiles = Array.from(files).map((file: any) => ({
         id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
@@ -189,10 +189,16 @@ export default function ManageSamples() {
 
   const handleFormat = async () => {
     try {
+      if(!selectedCategory && !selectedSubCategory){
+        alert("Please Select Category and Sub-Category first!");
+        return;
+      }
       setIsFormatting(true);
       const res = await formatResponse(formatInput);
-      console.log("res ", res);
-      setTestOutput(res);
+      const newData= res;
+      newData.data.category_name=selectedCategory?.name;
+      newData.data.subcategory_name=selectedSubCategory?.name;
+      setTestOutput(newData);
       setFormatInput(res);
       setIsFormatting(false);
     } catch (err: any) {
@@ -228,12 +234,12 @@ export default function ManageSamples() {
     const subCategory = category?.subCategories.find(
       (sc: any) => sc?._id === subCategoryId
     );
-    console.log(subCategoryId, "subCategory", subCategory);
     if (subCategory) {
       const files = await getFileBySubCategoryId(subCategoryId);
       setUploadedFiles(files.files);
       setSelectedSubCategory(subCategory);
-      setPrompt(subCategory.prompt);
+      if(subCategory?.prompt)
+      setPrompt(subCategory?.prompt);
     }
   };
 

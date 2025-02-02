@@ -83,7 +83,6 @@ export const generateResponse = async (
     };
     try {
         const response = await axios.request(config);
-        console.log('response.data', JSON.parse(response.data.ai))
         return JSON.parse(response.data.ai);
       } catch (error: any) {
         console.error("API Error:", error.response?.data || error.message);
@@ -239,7 +238,6 @@ export const formatResponse = async (
   };
   try {
       const response = await axios.request(config);
-      console.log('response.data', response.data.ai)
       return response.data.ai;
     } catch (error: any) {
       console.error("API Error:", error.response?.data || error.message);
