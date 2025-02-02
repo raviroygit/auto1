@@ -193,6 +193,12 @@ export default function ManageSamples() {
         alert("Please Select Category and Sub-Category first!");
         return;
       }
+
+      if(!formatInput){
+        alert("Please paste your text input for formatting !");
+        return;
+      }
+      
       setIsFormatting(true);
       const res = await formatResponse(formatInput);
       const newData= res;
