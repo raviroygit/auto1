@@ -78,7 +78,7 @@ export default function CategoryPage() {
   };
 
   const handleAddCategory = async () => {
-    if (!newCategoryName.trim() || !newCategoryPrompt.trim()) {
+    if (!newCategoryName.trim()) {
       alert("Please fill in all fields");
       return;
     }

@@ -178,6 +178,8 @@ export default function ManageSamples() {
         alert("Please select a sub category or category first");
         return
       }
+
+
       setIsGenerating(true);
       const res = await generateResponse(testOutput);
       setResData(res);
@@ -198,7 +200,7 @@ export default function ManageSamples() {
         alert("Please paste your text input for formatting !");
         return;
       }
-      
+
       setIsFormatting(true);
       const res = await formatResponse(formatInput);
       const newData= res;
