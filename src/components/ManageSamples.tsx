@@ -433,7 +433,7 @@ export default function ManageSamples() {
                     style={{ backgroundColor: isGenerating ? "gray" : "green" }}
                     className="w-full text-white px-4 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                   >
-                    {isGenerating ? "Formatting..." : "Format"}
+                    {isGenerating ? "Pre-Processing..." : "Pre-Process"}
                   </button>
                 )}
               </div>
