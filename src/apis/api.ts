@@ -71,23 +71,25 @@ export const updateCategory = async (
  * Add a new category.
  * @param input - Description or prompt for the category
  */
-export const generateResponse = async (input: any): Promise<any> => {
-  const config: AxiosRequestConfig = {
-    method: "post",
-    maxBodyLength: Infinity,
-    url: "https://auto1-server.onrender.com/auto/ai",
-    headers: { "Content-Type": "application/json" },
-    data: input,
+export const generateResponse = async (
+    input: any,
+  ): Promise<any> => {
+    const config: AxiosRequestConfig = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: "https://auto1-server.onrender.com/auto/ai",
+      headers: { "Content-Type": "application/json" },
+      data: input,
+    };
+    try {
+        const response = await axios.request(config);
+        return JSON.parse(response.data.ai);
+      } catch (error: any) {
+        console.error("API Error:", error.response?.data || error.message);
+        alert(error.message)
+        throw error;
+      }
   };
-  try {
-    const response = await axios.request(config);
-    return JSON.parse(response.data.ai);
-  } catch (error: any) {
-    console.error("API Error:", error.response?.data || error.message);
-    alert(error.message);
-    throw error;
-  }
-};
 
 /**
  * Get sub-category by ID.
@@ -134,7 +136,7 @@ export const addSubCategory = async (
  */
 export const updateSubCategory = async (
   id: string,
-  prompt: string
+  prompt: string,
 ): Promise<any> => {
   const config: AxiosRequestConfig = {
     method: "put",
@@ -151,90 +153,96 @@ export const updateSubCategory = async (
  * @param subCategoryId - ID of the sub-category
  */
 export const uploadFiles = async (
-  files: File[],
-  subCategoryId: string
-): Promise<any> => {
-  try {
-    console.log('files uploadFiles', files)
+    files: File[],
+    subCategoryId: string
+  ): Promise<any> => {
     const formData = new FormData();
-    files.forEach(async (file) => {
+    files.forEach((file) => {
       formData.append("files", file);
-      formData.append("subCategoryId", subCategoryId);
-      const config: AxiosRequestConfig = {
-        method: "post",
-        maxBodyLength: Infinity,
-        url: "https://auto1-server.onrender.com/file", // Assuming backend expects "files" endpoint for multiple files
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        data: formData,
-      };
-      await axios.request(config);
     });
-    return true;
+    formData.append("subCategoryId", subCategoryId);
+  
+    const config: AxiosRequestConfig = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: "https://auto1-server.onrender.com/file", // Assuming backend expects "files" endpoint for multiple files
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      data: formData,
+    };
+  
+    try {
+      const response = await axios.request(config);
+      return response.data;
+    } catch (error: any) {
+      console.error("API Error:", error.response?.data || error.message);
+      alert(error.message)
+      throw error;
+    }
+  };
+  
 
-  } catch (error: any) {
-    console.error("API Error:", error.response?.data || error.message);
-    alert(error.message);
-    throw error;
-  }
-};
 
-export const getFileBySubCategoryId = async (
-  subCategoryId: string
-): Promise<any> => {
-  const config: AxiosRequestConfig = {
-    method: "get",
-    maxBodyLength: Infinity,
-    url: `https://auto1-server.onrender.com/file/${subCategoryId}`,
-    headers: {},
+export const getFileBySubCategoryId = async (subCategoryId: string): Promise<any> => {
+    const config: AxiosRequestConfig = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url: `https://auto1-server.onrender.com/file/${subCategoryId}`,
+      headers: {},
+    };
+  
+    try {
+      const response = await axios.request(config);
+      return response.data;
+    } catch (error: any) {
+      console.error("API Error:", error.response?.data || error.message);
+      alert(error.message)
+      throw error;
+    }
+  };
+  
+
+  export const deleteFileById = async (fileId: string): Promise<any> => {
+    const config: AxiosRequestConfig = {
+      method: "delete",
+      maxBodyLength: Infinity,
+      url: `https://auto1-server.onrender.com/file/${fileId}`,
+      headers: {},
+    };
+  
+    try {
+      const response = await axios.request(config);
+      return response.data;
+    } catch (error: any) {
+      console.error("API Error:", error.response?.data || error.message);
+      alert(error.message)
+      throw error;
+    }
   };
 
-  try {
-    const response = await axios.request(config);
-    return response.data;
-  } catch (error: any) {
-    console.error("API Error:", error.response?.data || error.message);
-    alert(error.message);
-    throw error;
-  }
-};
 
-export const deleteFileById = async (fileId: string): Promise<any> => {
-  const config: AxiosRequestConfig = {
-    method: "delete",
-    maxBodyLength: Infinity,
-    url: `https://auto1-server.onrender.com/file/${fileId}`,
-    headers: {},
-  };
 
-  try {
-    const response = await axios.request(config);
-    return response.data;
-  } catch (error: any) {
-    console.error("API Error:", error.response?.data || error.message);
-    alert(error.message);
-    throw error;
-  }
-};
-
-/**
+  /**
  * Add a new category.
  * @param input - Description or prompt for the category
  */
-export const formatResponse = async (input: any): Promise<any> => {
+export const formatResponse = async (
+  input: any,
+): Promise<any> => {
   const config: AxiosRequestConfig = {
     method: "post",
     url: "https://auto1-server.onrender.com/auto/format",
     headers: { "Content-Type": "application/json" },
-    data: { text: input },
+    data: {text:input},
   };
   try {
-    const response = await axios.request(config);
-    return response.data.ai;
-  } catch (error: any) {
-    console.error("API Error:", error.response?.data || error.message);
-    alert(error.message);
-    throw error;
-  }
+      const response = await axios.request(config);
+      console.log('response.data', response.data.ai)
+      return response.data.ai;
+    } catch (error: any) {
+      console.error("API Error:", error.response?.data || error.message);
+      alert(error.message)
+      throw error;
+    }
 };

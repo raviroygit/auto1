@@ -164,7 +164,7 @@ export default function ManageSamples() {
         name: file.name,
       }));
       setUploadedFiles([...unUploadedFiles, ...newFiles]);
-      setUnUploadedFiles([...unUploadedFiles, files[0]]);
+      setUnUploadedFiles([...unUploadedFiles, ...files]);
     }
   };
 
