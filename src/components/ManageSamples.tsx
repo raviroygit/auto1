@@ -189,7 +189,7 @@ export default function ManageSamples() {
 
   const handleFormat = async () => {
     try {
-      if(!selectedCategory && !selectedSubCategory){
+      if(!selectedCategory || !selectedSubCategory){
         alert("Please Select Category and Sub-Category first!");
         return;
       }
