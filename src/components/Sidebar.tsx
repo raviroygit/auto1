@@ -43,6 +43,16 @@ export default function Sidebar() {
         >
           Manage Samples
         </Link>
+        <Link 
+          to="/company-info" 
+          className={`px-3 py-2 rounded-md block ${
+            isActive('/company-info') 
+              ? 'bg-gray-900 text-white' 
+              : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+          }`}
+        >
+          Company info
+        </Link>
       </nav>
       <div className="p-4 border-t border-gray-700">
         <div className="text-gray-400 text-sm mb-2">You are logged in as Admin</div>

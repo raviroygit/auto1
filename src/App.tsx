@@ -5,6 +5,7 @@ import LoginPage from './components/LoginPage';
 import Layout from './components/Layout';
 import ManageSamples from './components/ManageSamples';
 import CategoryPage from './components/CategoryPage';
+import CompanyInfo from './components/CompanyInfo';
 
 function AppRoutes() {
   const { user } = useAuth();
@@ -22,6 +23,8 @@ function AppRoutes() {
           </div>} />
         <Route path="/category" element={<CategoryPage />} />
         <Route path="/manage-samples" element={<ManageSamples />} />
+        <Route path="/company-info" element={<CompanyInfo />} />
+
       </Routes>
     </Layout>
   );

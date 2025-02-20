@@ -246,3 +246,28 @@ export const formatResponse = async (
       throw error;
     }
 };
+
+
+  /**
+ * Add a new category.
+ * @param input - Description or prompt for the category
+ */
+  export const getCompanyInfo = async (
+    input: any,
+  ): Promise<any> => {
+    const config: AxiosRequestConfig = {
+      method: "post",
+      url: "https://auto1-server.onrender.com/auto/company-info",
+      headers: { "Content-Type": "application/json" },
+      data: {text:input},
+    };
+    try {
+        const response = await axios.request(config);
+        console.log('response.data', response.data.ai)
+        return response.data.ai;
+      } catch (error: any) {
+        console.error("API Error:", error.response?.data || error.message);
+        alert(error.message)
+        throw error;
+      }
+  };
