@@ -23,7 +23,7 @@ export const getCategories = async (): Promise<any> => {
   const config: AxiosRequestConfig = {
     method: "get",
     maxBodyLength: Infinity,
-    url: "https://auto1-server.onrender.com/category",
+    url: "https://auto1-server-production.up.railway.app/category",
     headers: {},
   };
   return apiRequest(config);
@@ -41,7 +41,7 @@ export const addCategory = async (
   const config: AxiosRequestConfig = {
     method: "post",
     maxBodyLength: Infinity,
-    url: "https://auto1-server.onrender.com/category",
+    url: "https://auto1-server-production.up.railway.app/category",
     headers: { "Content-Type": "application/json" },
     data: JSON.stringify({ name, prompt }),
   };
@@ -60,7 +60,7 @@ export const updateCategory = async (
   const config: AxiosRequestConfig = {
     method: "put",
     maxBodyLength: Infinity,
-    url: "https://auto1-server.onrender.com/category",
+    url: "https://auto1-server-production.up.railway.app/category",
     headers: { "Content-Type": "application/json" },
     data: JSON.stringify({ id, prompt }),
   };
@@ -77,7 +77,7 @@ export const generateResponse = async (
     const config: AxiosRequestConfig = {
       method: "post",
       maxBodyLength: Infinity,
-      url: "https://auto1-server.onrender.com/auto/ai",
+      url: "https://auto1-server-production.up.railway.app/auto/ai",
       headers: { "Content-Type": "application/json" },
       data: input,
     };
@@ -101,7 +101,7 @@ export const getSubCategoryById = async (
   const config: AxiosRequestConfig = {
     method: "get",
     maxBodyLength: Infinity,
-    url: `https://auto1-server.onrender.com/sub-category/${subCategoryId}`,
+    url: `https://auto1-server-production.up.railway.app/sub-category/${subCategoryId}`,
     headers: {},
   };
   return apiRequest(config);
@@ -121,7 +121,7 @@ export const addSubCategory = async (
   const config: AxiosRequestConfig = {
     method: "post",
     maxBodyLength: Infinity,
-    url: "https://auto1-server.onrender.com/sub-category",
+    url: "https://auto1-server-production.up.railway.app/sub-category",
     headers: { "Content-Type": "application/json" },
     data: JSON.stringify({ name, prompt, categoryId }),
   };
@@ -141,7 +141,7 @@ export const updateSubCategory = async (
   const config: AxiosRequestConfig = {
     method: "put",
     maxBodyLength: Infinity,
-    url: "https://auto1-server.onrender.com/sub-category",
+    url: "https://auto1-server-production.up.railway.app/sub-category",
     headers: { "Content-Type": "application/json" },
     data: JSON.stringify({ id, prompt }),
   };
@@ -165,7 +165,7 @@ export const uploadFiles = async (
     const config: AxiosRequestConfig = {
       method: "post",
       maxBodyLength: Infinity,
-      url: "https://auto1-server.onrender.com/file", // Assuming backend expects "files" endpoint for multiple files
+      url: "https://auto1-server-production.up.railway.app/file", // Assuming backend expects "files" endpoint for multiple files
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -188,7 +188,7 @@ export const getFileBySubCategoryId = async (subCategoryId: string): Promise<any
     const config: AxiosRequestConfig = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `https://auto1-server.onrender.com/file/${subCategoryId}`,
+      url: `https://auto1-server-production.up.railway.app/file/${subCategoryId}`,
       headers: {},
     };
   
@@ -207,7 +207,7 @@ export const getFileBySubCategoryId = async (subCategoryId: string): Promise<any
     const config: AxiosRequestConfig = {
       method: "delete",
       maxBodyLength: Infinity,
-      url: `https://auto1-server.onrender.com/file/${fileId}`,
+      url: `https://auto1-server-production.up.railway.app/file/${fileId}`,
       headers: {},
     };
   
@@ -232,7 +232,7 @@ export const formatResponse = async (
 ): Promise<any> => {
   const config: AxiosRequestConfig = {
     method: "post",
-    url: "https://auto1-server.onrender.com/auto/format",
+    url: "https://auto1-server-production.up.railway.app/auto/format",
     headers: { "Content-Type": "application/json" },
     data: {text:input},
   };
@@ -257,7 +257,7 @@ export const formatResponse = async (
   ): Promise<any> => {
     const config: AxiosRequestConfig = {
       method: "post",
-      url: "https://auto1-server.onrender.com/auto/company-info",
+      url: "https://auto1-server-production.up.railway.app/auto/company-info",
       headers: { "Content-Type": "application/json" },
       data: {text:input},
     };
