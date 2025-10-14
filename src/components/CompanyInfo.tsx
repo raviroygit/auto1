@@ -5,7 +5,7 @@ import {  useState } from "react";
 import { Card, CardContent, CardHeader } from "./ui/card";
 
 import { Separator } from "./ui/separator";
-import {  getCompanyInfo } from "../apis/api";
+import {  getCompanyInfo } from "../apis/railway-api";
 
 import { Building2 } from "lucide-react";
 

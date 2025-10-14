@@ -7,7 +7,7 @@ import {
   getCategories,
   updateCategory,
   updateSubCategory,
-} from "../apis/api";
+} from "../apis/railway-api";
 import Spinner from "./ui/Spinner";
 
 interface Category {

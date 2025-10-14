@@ -28,7 +28,7 @@ import {
   getFileBySubCategoryId,
   updateSubCategory,
   uploadFiles,
-} from "../apis/api";
+} from "../apis/railway-api";
 import { defaultPrompt } from "../constant";
 import { Dialog } from "./ui/dialog";
 import Spinner from "./ui/Spinner";
