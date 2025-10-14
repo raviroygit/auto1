@@ -39,7 +39,7 @@ export default function CompanyInfo() {
         <div className="w-full min-h-screen p-4 sm:p-6 md:p-8 flex justify-center">
           <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 max-w-3xl w-full">
             <h2 className="text-lg font-semibold text-gray-800 mb-4 text-center">
-              Extract Company information's
+              Extract Company information
             </h2>
             <textarea
               value={input}
@@ -74,7 +74,7 @@ export default function CompanyInfo() {
                     <>
                       <CardHeader className="flex-row font-bold  ">
                         <Building2 className="me-2 w-4" />
-                        Company information's
+                        Company information
                       </CardHeader>
                       <CardContent>{resData}</CardContent>
                     </>
