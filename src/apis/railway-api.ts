@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
-const RAILWAY_BASE_URL = "https://auto1-server-production.up.railway.app";
+const RAILWAY_BASE_URL = "https://auto1-server.onrender.com";
 
 /**
  * Generic function to handle API requests.
