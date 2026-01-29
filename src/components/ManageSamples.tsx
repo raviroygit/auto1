@@ -161,21 +161,29 @@ export default function ManageSamples() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files: any = e.target.files;
     if (files) {
-      const newFiles = Array.from(files).map((file: any) => ({
-        id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
-        name: file.name,
-      }));
-      setUploadedFiles([...unUploadedFiles, ...newFiles]);
-      setUnUploadedFiles([...unUploadedFiles, ...files]);
+      // Only add to unUploadedFiles, not to uploadedFiles
+      // uploadedFiles should only contain files that are already uploaded to the server
+      setUnUploadedFiles([...unUploadedFiles, ...Array.from(files)]);
     }
   };
 
-  const handleCancel = () => {};
+  const handleCancel = () => {
+    // Clear selected files when cancel is clicked
+    setUnUploadedFiles([]);
+  };
 
   const handleUploadFiles = async () => {
-    await uploadFiles(unUploadedFiles, selectedSubCategory._id);
-    const files = await getFileBySubCategoryId(selectedSubCategory._id);
-    setUploadedFiles(files.files);
+    const subCategoryId = selectedSubCategory?._id || selectedSubCategory?.id;
+    if (!subCategoryId) {
+      alert("Please select a subcategory first");
+      return;
+    }
+    await uploadFiles(unUploadedFiles, subCategoryId);
+    // Fetch files only for the selected subcategory
+    const files = await getFileBySubCategoryId(subCategoryId);
+    setUploadedFiles(files.files || []);
+    // Clear unuploaded files after successful upload
+    setUnUploadedFiles([]);
     alert("File uploaded successfully");
   };
 
@@ -194,7 +202,16 @@ export default function ManageSamples() {
       }
 
       setIsGenerating(true);
-      const res = await generateResponse(testOutput);
+      // Add category_id and subcategory_id to the payload
+      const payload = {
+        ...testOutput,
+        data: {
+          ...testOutput.data,
+          category_id: selectedCategory._id || selectedCategory.id,
+          subcategory_id: selectedSubCategory._id || selectedSubCategory.id,
+        },
+      };
+      const res = await generateResponse(payload);
       setResData(res);
       setIsGenerating(false);
     } catch (err: any) {
@@ -239,12 +256,29 @@ export default function ManageSamples() {
     }
   };
 
-  const handleCategoryChange = (categoryId: string) => {
+  const handleCategoryChange = async (categoryId: string) => {
     const category: any = categories.find((c: any) => c._id === categoryId);
     if (category) {
       setSubCategories(category?.subCategories);
       setSelectedCategory(category);
-      setSelectedSubCategory(null);
+      // Clear files when category changes
+      setUploadedFiles([]);
+      setUnUploadedFiles([]);
+      
+      // Auto-select the first subcategory if available
+      if (category?.subCategories && category.subCategories.length > 0) {
+        const firstSubCategory = category.subCategories[0];
+        const subCategoryId = firstSubCategory._id || firstSubCategory.id;
+        // Fetch files for the auto-selected subcategory
+        setUploadedFiles([]);
+        setUnUploadedFiles([]);
+        const files = await getFileBySubCategoryId(subCategoryId);
+        setUploadedFiles(files.files || []);
+        setSelectedSubCategory(firstSubCategory);
+        if (firstSubCategory?.prompt) setPrompt(firstSubCategory.prompt);
+      } else {
+        setSelectedSubCategory(null);
+      }
     }
   };
 
@@ -256,8 +290,12 @@ export default function ManageSamples() {
       (sc: any) => sc?._id === subCategoryId
     );
     if (subCategory) {
+      // Clear files first before fetching new ones
+      setUploadedFiles([]);
+      setUnUploadedFiles([]);
+      // Fetch files only for the selected subcategory
       const files = await getFileBySubCategoryId(subCategoryId);
-      setUploadedFiles(files.files);
+      setUploadedFiles(files.files || []);
       setSelectedSubCategory(subCategory);
       if (subCategory?.prompt) setPrompt(subCategory?.prompt);
     }
@@ -340,26 +378,41 @@ export default function ManageSamples() {
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 h-[150px] flex flex-col">
                   <h2 className="text-lg font-semibold text-gray-800 mb-3">
                     Available Files
+                    {selectedSubCategory && (
+                      <span className="text-sm text-gray-500 font-normal ml-2">
+                        ({selectedSubCategory.name})
+                      </span>
+                    )}
                   </h2>
                   <div className="flex-1 overflow-y-auto">
-                    <div className="space-y-2">
-                      {uploadedFiles?.map((file: any) => (
-                        <div
-                          key={file?._id}
-                          className="flex items-center justify-between bg-gray-50 p-3 rounded-md"
-                        >
-                          <span className="text-gray-700 w-[300px]">
-                            {file?.name}
-                          </span>
-                          <button
-                            onClick={() => handleDeleteFile(file?._id)}
-                            className="text-red-500 hover:text-red-700 p-1"
+                    {!selectedSubCategory ? (
+                      <p className="text-gray-500 text-sm text-center mt-4">
+                        Please select a subcategory to view files
+                      </p>
+                    ) : uploadedFiles && uploadedFiles.length > 0 ? (
+                      <div className="space-y-2">
+                        {uploadedFiles.map((file: any) => (
+                          <div
+                            key={file?._id}
+                            className="flex items-center justify-between bg-gray-50 p-3 rounded-md"
                           >
-                            <Trash2 className="h-5 w-5" />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
+                            <span className="text-gray-700 w-[300px]">
+                              {file?.name}
+                            </span>
+                            <button
+                              onClick={() => handleDeleteFile(file?._id)}
+                              className="text-red-500 hover:text-red-700 p-1"
+                            >
+                              <Trash2 className="h-5 w-5" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-gray-500 text-sm text-center mt-4">
+                        No files available for this subcategory
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -384,6 +437,41 @@ export default function ManageSamples() {
                     </label>
                   </div>
                 </div>
+
+                {/* Selected Files (Not Yet Uploaded) */}
+                {unUploadedFiles && unUploadedFiles.length > 0 && (
+                  <div className="mt-4">
+                    <h3 className="text-sm font-semibold text-gray-700 mb-2">
+                      Selected Files ({unUploadedFiles.length})
+                    </h3>
+                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 max-h-40 overflow-y-auto">
+                      <div className="space-y-2">
+                        {unUploadedFiles.map((file: File, index: number) => (
+                          <div
+                            key={index}
+                            className="flex items-center justify-between bg-gray-50 p-2 rounded-md"
+                          >
+                            <span className="text-gray-700 text-sm flex-1 truncate">
+                              {file.name}
+                            </span>
+                            <button
+                              onClick={() => {
+                                const newFiles = unUploadedFiles.filter(
+                                  (_: File, i: number) => i !== index
+                                );
+                                setUnUploadedFiles(newFiles);
+                              }}
+                              className="text-red-500 hover:text-red-700 p-1 ml-2"
+                              title="Remove file"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 <div className="flex justify-start space-x-4 mt-4">
                   <button
