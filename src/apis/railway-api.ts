@@ -4,7 +4,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 // Use VITE_API_BASE_URL in production (set in Vercel/hosting env). Default to localhost for dev.
 // const RAILWAY_BASE_URL =
 //   import.meta.env.VITE_API_BASE_URL || "http://localhost:8001";
-const RAILWAY_BASE_URL = "https://auto1-server.onrender.com";
+const RAILWAY_BASE_URL = "https://auto1-server.onrender.com"; 
 
 /**
  * Generic function to handle API requests.
