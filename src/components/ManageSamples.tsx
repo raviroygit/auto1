@@ -3,9 +3,11 @@
 import { useEffect, useState } from "react";
 import {
   Building2,
+  FileText,
   ListChecks,
   Loader,
   Package,
+  Settings,
   Star,
   Trash2,
 } from "lucide-react";
@@ -457,12 +459,18 @@ export default function ManageSamples() {
                           <h1 className="text-3xl font-bold tracking-tight">
                             {resData?.data?.user_input?.title}
                           </h1>
+                          {resData?.data?.user_input?.company_name &&
+                            resData?.data?.user_input?.company_name.trim() !==
+                              "NA" &&
+                            resData?.data?.user_input?.company_name.trim()
+                              .length > 0 && (
                           <div className="flex items-center space-x-2 text-muted-foreground">
                             <Building2 className="h-4 w-4" />
                             <span>
                               {resData?.data?.user_input?.company_name}
                             </span>
                           </div>
+                            )}
                         </div>
                         <Badge className="text-sm">
                           {resData?.data?.subcategory_name}
@@ -471,16 +479,32 @@ export default function ManageSamples() {
                     </CardHeader>
                     <CardContent className="space-y-8">
                       {/* Description */}
-                      <div>
-                        <p className="text-lg text-muted-foreground">
-                          {resData?.data?.user_input?.description}
-                        </p>
-                      </div>
-
-                      <Separator />
+                      {resData?.data?.user_input?.description &&
+                        resData?.data?.user_input?.description.trim() !==
+                          "NA" &&
+                        resData?.data?.user_input?.description.trim().length >
+                          0 && (
+                          <>
+                            <div className="space-y-4">
+                              <div className="flex items-center space-x-2">
+                                <FileText className="h-5 w-5 text-primary" />
+                                <h2 className="text-xl font-semibold">
+                                  Description
+                                </h2>
+                              </div>
+                              <p className="text-lg text-muted-foreground">
+                                {resData?.data?.user_input?.description}
+                              </p>
+                            </div>
+                            <Separator />
+                          </>
+                        )}
 
                       {/* Features */}
-                      {resData.data?.user_input?.features && (
+                      {resData.data?.user_input?.features &&
+                        Array.isArray(resData.data?.user_input?.features) &&
+                        resData.data?.user_input?.features.length > 0 && (
+                          <>
                         <div className="space-y-4">
                           <div className="flex items-center space-x-2">
                             <ListChecks className="h-5 w-5 text-primary" />
@@ -489,11 +513,7 @@ export default function ManageSamples() {
                             </h2>
                           </div>
                           <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {resData.data?.user_input &&
-                              Array.isArray(
-                                resData.data?.user_input?.features
-                              ) &&
-                              resData.data?.user_input?.features?.map(
+                                {resData.data?.user_input?.features?.map(
                                 (feature: string, index: number) => (
                                   <li
                                     key={index}
@@ -506,17 +526,23 @@ export default function ManageSamples() {
                               )}
                           </ul>
                         </div>
+                            <Separator />
+                          </>
                       )}
 
-                      <Separator />
-
                       {/* Attributes */}
-                      {testOutput?.data?.user_input?.attributes && (
-                        <div className="space-y-4">
-                          <h2 className="text-xl font-semibold">
-                            Specifications
-                          </h2>
-                          <Table>
+                      {resData?.data?.user_input?.attributes &&
+                        Array.isArray(resData?.data?.user_input?.attributes) &&
+                        resData?.data?.user_input?.attributes.length > 0 && (
+                          <>
+                            <div className="space-y-4">
+                              <div className="flex items-center space-x-2">
+                                <Settings className="h-5 w-5 text-primary" />
+                                <h2 className="text-xl font-semibold">
+                                  Specifications
+                                </h2>
+                              </div>
+                              <Table>
                             <TableHeader>
                               <TableRow>
                                 <TableHead className="w-[200px]">
@@ -526,24 +552,8 @@ export default function ManageSamples() {
                               </TableRow>
                             </TableHeader>
                             <TableBody>
-                              {/* {JSON.stringify(testOutput.data.user_input.attributes)} */}
-                              {/* {testOutput.data.user_input.attributes?.map(
-                            (attribute: any, index: number) => (
-                              <TableRow key={index}>
-                                <TableCell className="font-medium">
-                                  {JSON.stringify(attribute.name)}
-                                </TableCell>
-                                <TableCell>
-                                  {typeof attribute.value === "object"
-                                    ? JSON.stringify(attribute.value, null, 2) // Convert object to a string
-                                    : attribute.value || "N/A"}
-                                </TableCell>
-                              </TableRow>
-                            )
-                          )} */}
-
-                              {testOutput.data.user_input.attributes.map(
-                                (attribute, index) => {
+                                  {resData.data.user_input.attributes.map(
+                                    (attribute: any, index: number) => {
                                   // Extract the key and value from the attribute object
                                   const [key, value] =
                                     Object.entries(attribute)[0];
@@ -552,7 +562,9 @@ export default function ManageSamples() {
                                       <TableCell className="font-medium">
                                         {key}
                                       </TableCell>
-                                      <TableCell>{value}</TableCell>
+                                          <TableCell>
+                                            {String(value || "")}
+                                          </TableCell>
                                     </TableRow>
                                   );
                                 }
@@ -560,12 +572,17 @@ export default function ManageSamples() {
                             </TableBody>
                           </Table>
                         </div>
+                            <Separator />
+                          </>
                       )}
 
-                      <Separator />
-
                       {/* Reviews */}
-                      <></>
+                      {((Array.isArray(resData.data?.user_input?.reviews) &&
+                        resData.data?.user_input?.reviews.length > 0) ||
+                        (typeof resData.data?.user_input?.reviews === "string" &&
+                          resData.data?.user_input?.reviews.trim().length > 0 &&
+                          resData.data?.user_input?.reviews.trim().toUpperCase() !==
+                            "NA")) && (
                       <div className="space-y-4">
                         <div className="flex items-center space-x-2">
                           <Star className="h-5 w-5 text-primary" />
@@ -573,17 +590,34 @@ export default function ManageSamples() {
                             Customer Reviews
                           </h2>
                         </div>
-                        {/* {resData.data?.user_input?.reviews?.length > 0 ? ( */}
                         <div className="space-y-4">
                           <Card>
                             <CardContent className="pt-6">
+                                {Array.isArray(
+                                  resData.data?.user_input?.reviews
+                                ) ? (
+                                  <div className="space-y-2">
+                                    {resData.data?.user_input?.reviews.map(
+                                      (review: string, index: number) => (
+                                        <p
+                                          key={index}
+                                          className="text-muted-foreground"
+                                        >
+                                          {review}
+                                        </p>
+                                      )
+                                    )}
+                                  </div>
+                                ) : (
                               <p className="text-muted-foreground">
                                 {resData.data?.user_input?.reviews}
                               </p>
+                                )}
                             </CardContent>
                           </Card>
                         </div>
                       </div>
+                      )}
                     </CardContent>
                   </Card>
                 </div>

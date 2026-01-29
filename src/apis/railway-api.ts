@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
-const RAILWAY_BASE_URL = "https://auto1-server.onrender.com";
+// const RAILWAY_BASE_URL = "https://auto1-server.onrender.com";
+const RAILWAY_BASE_URL = "http://localhost:8001";
 
 /**
  * Generic function to handle API requests.
@@ -85,7 +86,11 @@ export const generateResponse = async (
     };
     try {
         const response = await axios.request(config);
-        return JSON.parse(response.data.ai);
+        // If ai is already an object, return it directly; otherwise parse it as JSON string
+        if (typeof response.data.ai === 'string') {
+          return JSON.parse(response.data.ai);
+        }
+        return response.data.ai;
       } catch (error: any) {
         console.error("API Error:", error.response?.data || error.message);
         alert(error.message)
